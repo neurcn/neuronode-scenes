@@ -1,0 +1,763 @@
+/*
+ * The phone page of a web scene (share/index.html): a title bar, the 3D view
+ * with its layer switches, sheets over the view's lower part and a bottom bar.
+ * Colors are design tokens (tokens.css); the data colors come from the scene.
+ */
+
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url('../vendor/ibm-plex-sans@5.3.0/files/ibm-plex-sans-latin-400-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 500;
+  src: url('../vendor/ibm-plex-sans@5.3.0/files/ibm-plex-sans-latin-500-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 600;
+  src: url('../vendor/ibm-plex-sans@5.3.0/files/ibm-plex-sans-latin-600-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url('../vendor/ibm-plex-mono@5.3.0/files/ibm-plex-mono-latin-400-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 500;
+  src: url('../vendor/ibm-plex-mono@5.3.0/files/ibm-plex-mono-latin-500-normal.woff2') format('woff2');
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+  background: var(--c-ground);
+  color: var(--c-text);
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+  /* No text selection or iPhone Copy/Look Up menu on a long press: it takes the touch from the 3D view. */
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+h1, h2, h3, h4, p, ul {
+  margin: 0;
+}
+
+ul {
+  padding: 0;
+  list-style: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: default;
+}
+
+.nn-share svg {
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: var(--icon-stroke);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.nn-share {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ------------------------------------------------------------ title bar */
+
+.nn-share__top {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--gap);
+  min-height: var(--h-header);
+  padding: env(safe-area-inset-top) 4px 0 var(--pad);
+  background: var(--c-ground);
+  border-bottom: 1px solid var(--c-hairline);
+}
+
+.nn-share__title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: var(--fs-emph);
+  line-height: var(--lh-emph);
+  font-weight: 600;
+}
+
+.nn-share__icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--r-lg);
+  background: transparent;
+  color: var(--c-text2);
+}
+
+.nn-share__icon[aria-pressed="true"] {
+  color: var(--c-accent);
+}
+
+/* ------------------------------------------------------------ the 3D view and what floats over it */
+
+.nn-share__view {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--c-viewport);
+}
+
+.nn-viewport__gl,
+.nn-viewport__overlay {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.nn-viewport__gl {
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.nn-viewport__overlay {
+  pointer-events: none;
+}
+
+.nn-share__layers {
+  position: absolute;
+  z-index: 2;
+  top: 10px;
+  left: 10px;
+  display: flex;
+  gap: 6px;
+}
+
+.nn-share__chip {
+  height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--c-border);
+  border-radius: 16px;
+  background: var(--c-panel);
+  color: var(--c-text3);
+  font-size: var(--fs-body);
+}
+
+.nn-share__chip[aria-checked="true"] {
+  border-color: var(--c-sel-edge);
+  background: var(--c-sel);
+  color: var(--c-text);
+}
+
+.nn-share__chip:disabled {
+  color: var(--c-text-dis);
+  border-color: var(--c-hairline);
+}
+
+/* Slice view's panel, under the switches while Slice is on: the plane and two sliders. */
+.nn-share__slice {
+  position: absolute;
+  z-index: 2;
+  top: 52px;
+  left: 10px;
+  right: 10px;
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px 12px;
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-lg);
+  background: var(--c-panel);
+}
+
+.nn-share__planes {
+  display: flex;
+  gap: 4px;
+}
+
+.nn-share__plane {
+  flex: 1;
+  height: 32px;
+  padding: 0 6px;
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-md);
+  background: transparent;
+  color: var(--c-text3);
+  font-size: var(--fs-body);
+}
+
+.nn-share__plane[aria-checked="true"] {
+  border-color: var(--c-sel-edge);
+  background: var(--c-sel);
+  color: var(--c-text);
+}
+
+.nn-share__range {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nn-share__range-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--gap);
+}
+
+.nn-share__range-value {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--c-text2);
+  font-size: var(--fs-caption);
+  line-height: var(--lh-caption);
+}
+
+.nn-share__range input {
+  width: 100%;
+  height: 32px;
+  margin: 0;
+  accent-color: var(--c-accent);
+  touch-action: pan-y; /* a sideways drag moves the thumb; the page itself does not scroll */
+}
+
+.nn-share__hint {
+  position: absolute;
+  z-index: 2;
+  top: 52px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 4px 12px;
+  border-radius: 14px;
+  background: var(--c-chip);
+  color: var(--c-text2);
+  font-size: var(--fs-caption);
+  line-height: var(--lh-caption);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.nn-share__notice {
+  position: absolute;
+  z-index: 2;
+  left: 10px;
+  right: 10px;
+  top: 52px;
+  padding: 6px 10px;
+  border-radius: var(--r-md);
+  background: var(--c-warn-fill);
+  color: var(--c-warn);
+  font-size: var(--fs-caption);
+  line-height: var(--lh-caption);
+}
+
+.nn-share__message {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 24px;
+  text-align: center;
+  background: var(--c-viewport);
+}
+
+.nn-share__message-title {
+  font-size: var(--fs-emph);
+  line-height: var(--lh-emph);
+  font-weight: 600;
+}
+
+.nn-share__message-text {
+  max-width: 340px;
+  color: var(--c-text2);
+}
+
+/* ------------------------------------------------------------ sheets */
+
+.nn-share__sheet {
+  position: absolute;
+  z-index: 3;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  max-height: 72%;
+  display: flex;
+  flex-direction: column;
+  background: var(--c-panel);
+  border-top: 1px solid var(--c-border);
+  border-radius: var(--r-lg) var(--r-lg) 0 0;
+}
+
+.nn-share__sheet[data-nn-sheet="card"] {
+  max-height: 50%;
+}
+
+.nn-share__sheet-head {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--gap);
+  padding: 2px 4px 0 var(--pad);
+  border-bottom: 1px solid var(--c-hairline);
+}
+
+.nn-share__sheet-title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: var(--fs-emph);
+  line-height: var(--lh-emph);
+  font-weight: 600;
+}
+
+.nn-share__sheet-body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  padding: 12px var(--pad) 16px;
+  -webkit-user-select: text; /* a sheet's words may be copied: its touches never reach the 3D view */
+  user-select: text;
+}
+
+/* ------------------------------------------------------------ bottom bar */
+
+.nn-share__bar {
+  flex: none;
+  display: flex;
+  padding: 0 4px env(safe-area-inset-bottom);
+  background: var(--c-ground);
+  border-top: 1px solid var(--c-hairline);
+}
+
+.nn-share__bar-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  height: 56px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--c-text2);
+  font-size: var(--fs-caption);
+  line-height: var(--lh-caption);
+}
+
+.nn-share__bar-btn[aria-pressed="true"] {
+  color: var(--c-accent);
+}
+
+/* With only a message to show, there is nothing to open. */
+.nn-share[data-nn-state="message"] .nn-share__bar,
+.nn-share[data-nn-state="message"] .nn-share__top .nn-share__icon {
+  display: none;
+}
+
+.nn-share__bar-btn:disabled,
+.nn-share__icon:disabled {
+  color: var(--c-text-dis);
+}
+
+/* ------------------------------------------------------------ shared bits */
+
+.nn-share-label {
+  font-size: var(--fs-caption);
+  line-height: var(--lh-caption);
+  font-weight: 500;
+  color: var(--c-text3);
+}
+
+.nn-share-note {
+  font-size: var(--fs-caption);
+  line-height: var(--lh-caption);
+  color: var(--c-text3);
+}
+
+.nn-share-sep {
+  color: var(--c-text3);
+}
+
+.nn-share-dot {
+  display: inline-block;
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--nn-dot, var(--c-no-data));
+}
+
+.nn-share-dot--sm {
+  width: 8px;
+  height: 8px;
+}
+
+.nn-share-dot--inc {
+  --nn-dot: var(--c-inc);
+}
+
+.nn-share-dot--dec {
+  --nn-dot: var(--c-dec);
+}
+
+.nn-share-dot--zero {
+  --nn-dot: var(--c-zero);
+}
+
+.nn-share-swatch {
+  display: block;
+  flex: none;
+  width: 14px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--nn-swatch, var(--c-zero));
+}
+
+.nn-share-swatch--wide {
+  width: 18px;
+}
+
+.nn-share-swatch--inc {
+  --nn-swatch: var(--c-inc);
+}
+
+.nn-share-swatch--dec {
+  --nn-swatch: var(--c-dec);
+}
+
+.nn-share-swatch--zero {
+  --nn-swatch: var(--c-zero);
+}
+
+/* ------------------------------------------------------------ the card */
+
+.nn-share-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.nn-share-card__name {
+  font-size: var(--fs-title);
+  line-height: var(--lh-title);
+  font-weight: 500;
+}
+
+.nn-share-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  color: var(--c-text2);
+}
+
+.nn-share-card__section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 10px;
+  border-top: 1px solid var(--c-hairline);
+}
+
+.nn-share-card__stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--gap);
+}
+
+.nn-share-card__stat {
+  display: flex;
+  flex-direction: column;
+}
+
+.nn-share-card__value {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-emph);
+  line-height: var(--lh-emph);
+}
+
+.nn-share-card__edges-head {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--gap);
+}
+
+.nn-share-card__edge {
+  display: grid;
+  grid-template-columns: 18px 1fr auto auto;
+  align-items: center;
+  column-gap: 10px;
+  min-height: var(--h-table-row);
+  border-bottom: 1px solid var(--c-hairline);
+}
+
+.nn-share-card__partner {
+  font-weight: 500;
+}
+
+.nn-share-card__num {
+  font-family: var(--font-mono);
+  text-align: right;
+}
+
+.nn-share-card__sig {
+  color: var(--c-text2);
+}
+
+/* ------------------------------------------------------------ the legend */
+
+.nn-share-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nn-share-legend__caption {
+  font-size: var(--fs-title);
+  line-height: var(--lh-title);
+  font-weight: 600;
+}
+
+.nn-share-legend__block {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.nn-share-legend__block + .nn-share-legend__block,
+.nn-share-legend__note {
+  padding-top: 8px;
+  border-top: 1px solid var(--c-hairline);
+}
+
+.nn-share-legend__title {
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  font-weight: 600;
+}
+
+.nn-share-legend__sub,
+.nn-share-legend__note {
+  color: var(--c-text2);
+}
+
+.nn-share-legend__swatches {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 10px;
+  row-gap: 4px;
+}
+
+.nn-share-legend__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 20px;
+}
+
+.nn-share-legend__rows {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nn-share-legend__ramp {
+  height: 10px;
+  border-radius: 2px;
+  background: var(--nn-ramp, linear-gradient(90deg, var(--c-ramp-dec) 0%, var(--c-ramp-mid) 50%, var(--c-ramp-inc) 100%));
+}
+
+.nn-share-legend__ends {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+}
+
+.nn-share-legend__glyphs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nn-share-legend__glyph {
+  display: block;
+  flex: none;
+  border-radius: 50%;
+  background: var(--c-text2);
+}
+
+.nn-share-legend__glyph--sm {
+  width: 5px;
+  height: 5px;
+}
+
+.nn-share-legend__glyph--md {
+  width: 9px;
+  height: 9px;
+}
+
+.nn-share-legend__glyph--lg {
+  width: 13px;
+  height: 13px;
+}
+
+.nn-share-legend__style {
+  display: block;
+  flex: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--nn-dot, var(--c-no-data));
+  border: 2px solid var(--nn-ring, transparent);
+}
+
+/* ------------------------------------------------------------ the table */
+
+.nn-share-tables {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nn-share-tabs {
+  display: flex;
+  gap: 6px;
+}
+
+.nn-share-tab {
+  height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--c-border);
+  border-radius: 16px;
+  background: transparent;
+  color: var(--c-text2);
+}
+
+.nn-share-tab[aria-selected="true"] {
+  border-color: var(--c-sel-edge);
+  background: var(--c-sel);
+  color: var(--c-text);
+}
+
+.nn-share-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.nn-share-table th {
+  position: sticky;
+  top: -12px; /* the sheet body's top padding: the header row sticks to the sheet's head */
+  padding: 6px;
+  background: var(--c-header);
+  color: var(--c-text2);
+  font-size: var(--fs-caption);
+  font-weight: 500;
+  text-align: left;
+  vertical-align: bottom;
+}
+
+.nn-share-table td {
+  padding: 6px;
+  border-bottom: 1px solid var(--c-hairline);
+  vertical-align: top;
+}
+
+.nn-share-table tr.is-link:active td,
+.nn-share-table tr.is-link:focus-visible td {
+  background: var(--c-sel);
+}
+
+/* ------------------------------------------------------------ about */
+
+.nn-share-about {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nn-share-about__title {
+  font-size: var(--fs-title);
+  line-height: var(--lh-title);
+  font-weight: 600;
+}
+
+.nn-share-about .nn-share-label {
+  margin-top: 6px;
+}
+
+.nn-share-cite {
+  color: var(--c-text2);
+  font-size: var(--fs-caption);
+  line-height: var(--lh-caption);
+}

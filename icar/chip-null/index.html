@@ -1,0 +1,89 @@
+<!doctype html>
+<!--
+  The phone page of a web scene. server/web_share.py copies it to the top of
+  <project>/Web/<name>/ beside scene.nnw, with the import map filled in, so
+  every path here is relative to that folder.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex">
+  <meta name="referrer" content="no-referrer">
+  <meta name="color-scheme" content="dark">
+  <title>Neuronode scene</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="styles/tokens.css">
+  <link rel="stylesheet" href="share/phone.css">
+  <script type="importmap">{
+  "imports": {
+    "three": "./vendor/three@0.186.1/build/three.module.js"
+  }
+}</script>
+  <script type="module" src="share/main.js"></script>
+</head>
+<body>
+  <main class="nn-share" data-nn-share data-nn-state="loading">
+    <header class="nn-share__top">
+      <h1 class="nn-share__title" data-nn-title>Neuronode scene</h1>
+      <button type="button" class="nn-share__icon" data-nn-open="about" aria-label="About this scene" disabled>
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle>
+          <path d="M12 11v6M12 7.5v.5"></path></svg>
+      </button>
+    </header>
+    <div class="nn-share__view" data-nn-view>
+      <div class="nn-share__layers" role="group" aria-label="Show in the view" hidden data-nn-layers>
+        <button type="button" class="nn-share__chip" role="switch" aria-checked="true" data-nn-layer="shell">Shell</button>
+        <button type="button" class="nn-share__chip" role="switch" aria-checked="true" data-nn-layer="edges">Edges</button>
+        <button type="button" class="nn-share__chip" role="switch" aria-checked="true" data-nn-layer="labels">Labels</button>
+        <button type="button" class="nn-share__chip" role="switch" aria-checked="false" data-nn-switch="slice"
+          aria-controls="nn-share-slice">Slice</button>
+      </div>
+      <div class="nn-share__slice" id="nn-share-slice" role="group" aria-label="Slice" hidden data-nn-slice-panel>
+        <div class="nn-share__planes" role="radiogroup" aria-label="Plane">
+          <button type="button" class="nn-share__plane" role="radio" aria-checked="true" data-nn-plane="axial">Axial</button>
+          <button type="button" class="nn-share__plane" role="radio" aria-checked="false" data-nn-plane="coronal">Coronal</button>
+          <button type="button" class="nn-share__plane" role="radio" aria-checked="false" data-nn-plane="sagittal">Sagittal</button>
+        </div>
+        <label class="nn-share__range">
+          <span class="nn-share__range-head"><span class="nn-share-label">Position</span>
+            <span class="nn-share__range-value" data-nn-slice-label></span></span>
+          <input type="range" step="10" data-nn-slice-offset>
+        </label>
+        <label class="nn-share__range">
+          <span class="nn-share__range-head"><span class="nn-share-label">Thickness</span>
+            <span class="nn-share__range-value" data-nn-slice-thickness-text></span></span>
+          <input type="range" step="10" data-nn-slice-thickness>
+        </label>
+      </div>
+      <p class="nn-share__hint" hidden data-nn-hint>Drag to turn · pinch to zoom · tap a sphere</p>
+      <p class="nn-share__notice" hidden data-nn-notice></p>
+      <div class="nn-share__message" data-nn-message>
+        <h2 class="nn-share__message-title" data-nn-message-title>Opening the scene…</h2>
+        <p class="nn-share__message-text" data-nn-message-text></p>
+        <noscript><p class="nn-share__message-text">This page needs JavaScript.</p></noscript>
+      </div>
+      <section class="nn-share__sheet" hidden data-nn-sheet role="dialog" aria-labelledby="nn-share-sheet-title">
+        <header class="nn-share__sheet-head">
+          <h2 class="nn-share__sheet-title" id="nn-share-sheet-title" data-nn-sheet-title></h2>
+          <button type="button" class="nn-share__icon" data-nn-close aria-label="Close">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+          </button>
+        </header>
+        <div class="nn-share__sheet-body" data-nn-sheet-body></div>
+      </section>
+    </div>
+    <nav class="nn-share__bar" aria-label="Scene">
+      <button type="button" class="nn-share__bar-btn" data-nn-open="legend" disabled>
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="6" cy="7" r="2"></circle>
+          <circle cx="6" cy="17" r="2"></circle><path d="M11 7h8M11 17h8"></path></svg>Legend</button>
+      <button type="button" class="nn-share__bar-btn" data-nn-open="table" disabled>
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><rect x="3.5" y="5" width="17" height="14" rx="1.5"></rect>
+          <path d="M3.5 10h17M3.5 14.5h17M10 10v9"></path></svg>Table</button>
+      <button type="button" class="nn-share__bar-btn" data-nn-action="reset" disabled>
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M5 12a7 7 0 1 0 2.1-5"></path>
+          <path d="M5 4v4h4"></path></svg>Reset view</button>
+    </nav>
+  </main>
+</body>
+</html>

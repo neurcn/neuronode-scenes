@@ -1,0 +1,171 @@
+/*
+ * Neuronode design tokens, direction D (plan 3.9). Dark only.
+ *
+ * Written by app/tools/make_tokens_css.py from design/ui_refresh/mockup_src/kit.py
+ * (non-data tokens) and app/neuronode/core/palette.py (data tokens), plus four
+ * status tokens the kit lacks. This file is the source of truth now: every color
+ * the page draws in CSS is one of these properties, and no other CSS or script
+ * file holds a color literal (tests/test_web_tokens.py).
+ *
+ * The tokens are scoped to :root[data-theme="dark"] as well as :root, so a light
+ * set can be added later as its own block. A second block redefines the figure
+ * furniture tokens for the 3D view's white and transparent backgrounds.
+ */
+
+:root,
+:root[data-theme="dark"] {
+  /* Surfaces */
+  --c-viewport: #000000;
+  --c-ground: #0A1322;
+  --c-panel: #0F1B30;
+  --c-zebra: #122038;
+  --c-raised: #162741;
+  --c-chip: #1E3355;
+  --c-header: #13294B;
+  --c-sel: #1C3F66;
+  --c-sel-edge: #2C5A8C;
+
+  /* Lines */
+  --c-border: #243857;
+  --c-hairline: #1A2A45;
+  --c-strong: #3A5683;
+  --c-outline: #4F6A91;
+
+  /* Text */
+  --c-text: #EAF1F9;
+  --c-text2: #B7C6D9;
+  --c-text3: #8EA3BD;
+  --c-text-dis: #7A8FAB;
+  --c-white: #FFFFFF;
+  --c-on-accent: #06111F;
+
+  /* Accent (Carolina) */
+  --c-accent: #4B9CD3;
+  --c-accent2: #7BAFD4;
+  --c-accent3: #A9CCE8;
+  --c-accent-chip: #3F86B8;
+
+  /* Status */
+  --c-ok: #5CCB9B;
+  --c-ok-fill: #10302B;
+  --c-ok-border: #2B6B55;
+
+  /* Figure furniture: neutral, exported with the picture */
+  --fig-fill: #000000;
+  --fig-border: #3A4350;
+  --fig-rule: #262D38;
+  --fig-text: #F2F5F9;
+  --fig-text2: #B4BDC9;
+  --fig-axis: #8A94A3;
+  --fig-glyph: #C5D0DE;
+  --fig-mark: #FFFFFF;
+  --fig-label-dark: #10151C;
+  --fig-label-light: #F2F5F9;
+  --fig-check-a: #FFFFFF;
+  --fig-check-b: #D5DAE1;
+  --fig-lock: #FF5A4F;
+
+  /* Type */
+  --font-sans: 'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-mono: 'IBM Plex Mono', Menlo, Consolas, monospace;
+
+  /* Type sizes and line heights (nothing below 12 px) */
+  --fs-caption: 12px;
+  --lh-caption: 16px;
+  --fs-body: 13px;
+  --lh-body: 18px;
+  --fs-title: 14px;
+  --lh-title: 20px;
+  --fs-emph: 16px;
+  --lh-emph: 22px;
+  --fs-display: 20px;
+  --lh-display: 28px;
+
+  /* Bar, control and row heights */
+  --h-header: 48px;
+  --h-viewer-bar: 44px;
+  --h-sheet-title: 44px;
+  --h-status: 26px;
+  --h-band: 64px;
+  --h-ctrl: 28px;
+  --h-lg: 32px;
+  --h-row: 30px;
+  --h-table-head: 30px;
+  --h-table-row: 28px;
+  --h-tree-row: 24px;
+  --h-section: 36px;
+  --h-rail-btn: 50px;
+
+  /* Pane and control widths */
+  --w-sidebar: 256px;
+  --w-rail: 84px;
+  --w-rail-btn: 76px;
+  --w-sheet: 320px;
+  --w-inspector: 296px;
+  --w-legend: 316px;
+  --w-fs-btn: 180px;
+
+  /* Spacing (4 px grid) */
+  --pad: 16px;
+  --gap: 8px;
+
+  /* Radii */
+  --r-sm: 4px;
+  --r-md: 6px;
+  --r-lg: 8px;
+
+  /* Icons (stroke on the 24-unit grid) */
+  --icon-stroke: 1.7;
+
+  /* Status colors the kit lacks (plan 3.9; DIFFERENCES.md lists them) */
+  --c-error: #F28B82;
+  --c-error-fill: #3A1A22;
+  --c-warn: #E8B85C;
+  --c-warn-fill: #33290F;
+
+  /* Data: edge effect direction (the colors the scene draws, D44) */
+  --c-inc: #FF4040;
+  --c-dec: #4040FF;
+  --c-zero: #999999;
+
+  /* Data: the fixed delta scale of region colors */
+  --c-ramp-dec: #405CFF;
+  --c-ramp-mid: #E6E6E6;
+  --c-ramp-inc: #FF4040;
+  --c-no-data: #5C5C5C;
+
+  /* Data: the Compare view, a region in the other dataset only (D46) */
+  --c-one-dataset: #B4B4B4;
+
+  /* Data: atlas divisions */
+  --c-div-isocortex: #70FF71;
+  --c-div-olfactory-areas: #9AD2BD;
+  --c-div-hippocampal-formation: #7ED04B;
+  --c-div-cortical-subplate: #8ADA87;
+  --c-div-striatum: #98D6F9;
+  --c-div-pallidum: #8599CC;
+  --c-div-thalamus: #FF7080;
+  --c-div-hypothalamus: #E64438;
+  --c-div-midbrain: #FF64FF;
+  --c-div-pons: #FF9B88;
+  --c-div-medulla: #FF9BCD;
+  --c-div-cerebellum: #F0F080;
+  --c-div-fiber-tracts: #CCCCCC;
+  --c-div-ventricular-systems: #8FA8B8;
+  --c-div-grooves: #A393A0;
+  --c-div-retina: #9DA88A;
+  --c-div-unknown: #A0A0A0;
+}
+
+[data-fig-theme="light"] {
+  /* Figure furniture on the 3D view's white or transparent background */
+  --fig-fill: #FFFFFF;
+  --fig-border: #C3CAD3;
+  --fig-rule: #DCE1E7;
+  --fig-text: #10151C;
+  --fig-text2: #47505D;
+  --fig-axis: #5B6573;
+  --fig-glyph: #3A4350;
+  --fig-mark: #10151C;
+  --fig-lock: #C8231B;
+}
